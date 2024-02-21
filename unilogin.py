@@ -11,7 +11,7 @@ def postForm(prevR, data, session):
     r = session.post(action, data=data, follow_redirects=True)
     return r
 
-def login(username, password):
+def unilogin(username, password):
     session = httpx.Client()
     session.headers['user-agent'] = 'Mozilla/5.0'
     resp = session.get("https://www.aula.dk/auth/login.php?type=unilogin", follow_redirects=False)

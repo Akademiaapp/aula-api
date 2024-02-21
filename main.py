@@ -5,6 +5,8 @@ from pydantic import BaseModel
 
 from aulaHandler import aulaHandler
 
+from unilogin import unilogin
+
 app = FastAPI()
 
 @app.get("/")
@@ -23,12 +25,11 @@ class User(BaseModel):
 
 @app.post("/getCalenderEventsUsingUnilogin")
 def getCalenderEventsUsingUnilogin(user: User):
-    session = login(user.username, user.password)
+    session = unilogin(user.username, user.password)
     print(session.cookies)
     handler = aulaHandler(session=session)
-
-    handler.getCalenderEvents()
-    return 
+    
+    return handler.getCalenderEvents()
 
 @app.post("/login")
 def login(user: User):
