@@ -37,6 +37,12 @@ class aulaHandler:
         print(r)
         print(r.text)
         rData = json.loads(r.text)["data"]
+        json_object = json.dumps(rData, indent=4)
+ 
+        # Writing to sample.json
+        with open("sample.json", "w") as outfile:
+            outfile.write(json_object)
+            
         print(rData)
         return rData
         
