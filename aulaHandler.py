@@ -14,10 +14,10 @@ class aulaHandler:
         self.institutionCode = self.profileInfo["institutionProfiles"][0]["institutionCode"]
         
         
-        self.token = self.session.cookies["SimpleSAML"]
-        self.session.headers["Csrfp-Token"] = self.token
-        self.session.headers["Origin"] = "https://www.aula.dk"
-        self.session.cookies["Csrfp-Token"] = self.token
+        self.token = self.session.cookies["Csrfp-Token"]
+        # self.session.headers["Csrfp-Token"] = self.token
+        # self.session.headers["Origin"] = "https://www.aula.dk"
+        # self.session.cookies["Csrfp-Token"] = self.token
         
         print("DisplayName: ", self.profileInfo["displayName"], ", Id: ", self.id, ", token", self.token)
         pass
@@ -28,14 +28,14 @@ class aulaHandler:
         
         data = {
                 "instProfileIds": [self.id],
-                "resourceIds": [],
                 "start": start_date,
                 "end": end_date,
                 }
         
     
-        r = self.session.post("https://www.aula.dk/api/v18/?method=calendar.getEventsByProfileIdsAndResourceIds", data=data, headers={"Csrfp-Token": self.token, "Origin": "https://www.aula.dk", "authority": "www.aula.dk"})
+        r = self.session.post("https://www.aula.dk/api/v18/?method=calendar.getEventsByProfileIdsAndResourceIds", json=data, headers={"Csrfp-Token": self.token})
         print(r)
+        print(r.text)
         rData = json.loads(r.text)["data"]
         print(rData)
         return rData
