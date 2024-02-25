@@ -1,6 +1,7 @@
 # Aula API
 A rather simple API for interaction with the Danish school platform [Aula](https://aulainfo.dk/). When starting the API it opens endpoints for interacting with Aula's functionalities.
-
+> [!NOTE]
+> This API is in a very early stage of development. Expect frequent changes and limited functionality.
 ## Technologies Used
 - Python: Selected Python for backend development due to its simplicity, readability, and extensive library ecosystem.
 - FastAPI: FastAPI makes it possible to develop rubust APIs, with rapid iteration and minimal code.
@@ -21,3 +22,5 @@ The API currently provides the following endpoints:
 ### Todo
 - Add more endpoints for more functionality.
 - Implement better login handling using sessions for improved speed.
+
+
