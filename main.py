@@ -7,6 +7,8 @@ from aulaHandler import aulaHandler
 from unilogin import unilogin
 
 
+from unilogin import unilogin
+
 app = FastAPI()
 
 class User(BaseModel):
