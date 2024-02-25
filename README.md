@@ -4,7 +4,7 @@ A rather simple API for interaction with the Danish school platform Aula. When s
 ## Technologies Used
 - Python: Selected Python for backend development due to its simplicity, readability, and extensive library ecosystem.
 - FastAPI: FastAPI makes it possible to develop rubust APIs, with rapid iteration and minimal code.
-- HTTPX: The python HTTPX library is used to interact with the Aula platform
+- HTTPX: The python HTTPX library is used to interact with the Aula platform.
 
 ## Endpoints
 The API currently provides the following endpoints:
@@ -19,5 +19,5 @@ The API currently provides the following endpoints:
   - Returns the calendar events for the current week from Aula.
 
 ### Todo
-- Add more endpoints.
+- Add more endpoints for more functionality.
 - Implement better login handling using sessions for improved speed.
