@@ -16,7 +16,7 @@ session = login(user["username"], user["password"])
 print(session.cookies)
 handler = aulaHandler(session=session)
 
-handler.getCalenderEvents()
+print(handler.getCalenderEvents())
 
 # r = session.get("https://www.aula.dk/api/v18/?method=municipalConfiguration.getSameAdministrativeAuthorityInstitutions&institutionCode=373012")
 # print(r.text)

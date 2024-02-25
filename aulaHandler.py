@@ -12,7 +12,7 @@ class aulaHandler:
         
         self.token = self.session.cookies["Csrfp-Token"]
         
-        print("DisplayName: ", self.profileInfo["displayName"], ", Id: ", self.id, ", token", self.token)
+        # print("DisplayName: ", self.profileInfo["displayName"], ", Id: ", self.id, ", token", self.token)
         pass
 
     def getCalenderEvents(self):
@@ -27,16 +27,12 @@ class aulaHandler:
         
     
         r = self.session.post("https://www.aula.dk/api/v18/?method=calendar.getEventsByProfileIdsAndResourceIds", json=data, headers={"Csrfp-Token": self.token})
-        print(r)
-        print(r.text)
         rData = json.loads(r.text)["data"]
-        json_object = json.dumps(rData, indent=4)
  
+        # json_object = json.dumps(rData, indent=4)
         # Writing to sample.json for testing purposes
         # with open("sample.json", "w") as outfile:
         #     outfile.write(json_object)
-            
-        # print(rData)
         return rData
         
     def requestProfileInfo(self):

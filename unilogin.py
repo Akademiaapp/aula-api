@@ -6,7 +6,6 @@ from bs4 import BeautifulSoup
 def postForm(prevR, data, session):
     soup = BeautifulSoup(prevR.text, 'html.parser')
     action = soup.find("form").get("action")
-    print("Action: " + action)
 
     r = session.post(action, data=data, follow_redirects=True)
     return r
@@ -18,8 +17,6 @@ def unilogin(username, password):
 
     resp = session.get(resp.headers["location"], follow_redirects=False)
     href = resp.headers["location"]
-    # query = urlparse.urlparse(href).query
-    # print(urlparse.parse_qs(query)["SAMLRequest"])
 
     r = session.get(href, follow_redirects=False)
     r = postForm(r, {"selectedIdp": "uni_idp"}, session)
