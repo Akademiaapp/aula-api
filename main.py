@@ -4,11 +4,10 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 
 from aulaHandler import aulaHandler
-
 from unilogin import unilogin
 
-app = FastAPI()
 
+app = FastAPI()
 
 class User(BaseModel):
     username: str

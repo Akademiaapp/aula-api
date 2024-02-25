@@ -7,17 +7,10 @@ class aulaHandler:
     def __init__(self, session: httpx.Client):
         self.session = session
         self.profileInfo = self.requestProfileInfo()
-        
         self.id = self.profileInfo["institutionProfiles"][0]["id"]
-        
-        
         self.institutionCode = self.profileInfo["institutionProfiles"][0]["institutionCode"]
         
-        
         self.token = self.session.cookies["Csrfp-Token"]
-        # self.session.headers["Csrfp-Token"] = self.token
-        # self.session.headers["Origin"] = "https://www.aula.dk"
-        # self.session.cookies["Csrfp-Token"] = self.token
         
         print("DisplayName: ", self.profileInfo["displayName"], ", Id: ", self.id, ", token", self.token)
         pass
@@ -39,11 +32,11 @@ class aulaHandler:
         rData = json.loads(r.text)["data"]
         json_object = json.dumps(rData, indent=4)
  
-        # Writing to sample.json
-        with open("sample.json", "w") as outfile:
-            outfile.write(json_object)
+        # Writing to sample.json for testing purposes
+        # with open("sample.json", "w") as outfile:
+        #     outfile.write(json_object)
             
-        print(rData)
+        # print(rData)
         return rData
         
     def requestProfileInfo(self):
