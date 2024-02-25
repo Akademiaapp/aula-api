@@ -1,5 +1,5 @@
 # Aula API
-A rather simple API for interaction with the Danish school platform [Aula](https://aulainfo.dk/). When starting the API it opens endpoints for interacting with Aula's functionalities. Built with Python, FastAPI, and httpx.
+A rather simple API for interaction with the Danish school platform [Aula](https://aulainfo.dk/). When starting the API it opens endpoints for interacting with Aula's functionalities.
 
 ## Technologies Used
 - Python: Selected Python for backend development due to its simplicity, readability, and extensive library ecosystem.
