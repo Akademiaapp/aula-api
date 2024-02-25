@@ -14,14 +14,10 @@ class User(BaseModel):
     username: str
     password: str
 
-@app.post("/getCalenderEventsUsingUnilogin")
+@app.post("/getCalendarEventsUsingUnilogin")
 def getCalenderEventsUsingUnilogin(user: User):
     session = unilogin(user.username, user.password)
     print(session.cookies)
     handler = aulaHandler(session=session)
     
     return handler.getCalenderEvents()
-
-# @app.post("/login")
-# def login(user: User):
-#     return {"username": user.username}
