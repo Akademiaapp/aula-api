@@ -1,6 +1,6 @@
 
 import urllib.parse as urlparse
-from unilogin import login    
+from unilogin import unilogin    
 from aulaHandler import aulaHandler
 import json
 # with open("user.json") as f:
@@ -12,7 +12,7 @@ import json
 with open("user.json") as f:
      user = json.load(f)
      
-session = login(user["username"], user["password"])
+session = unilogin(user["username"], user["password"])
 print(session.cookies)
 handler = aulaHandler(session=session)
 
