@@ -12,7 +12,10 @@ async fn main() {
     let mut contents = String::new();
     file.read_to_string(&mut contents).expect("Failed to read JSON file");
 
+
     // Parse the JSON contents
+
+
     let json: Value = serde_json::from_str(&contents).expect("Failed to parse JSON");
 
     // Get the username and password from the JSON

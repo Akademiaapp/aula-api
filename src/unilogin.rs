@@ -1,8 +1,6 @@
-use scraper::{Html, Selector};
 use reqwest;
-use reqwest::{Response, Client};
-use std::fs::File;
-use std::io::Read;
+use reqwest::{Client, Response};
+use scraper::{Html, Selector};
 
 async fn post_form(prev_r: Response, data: String, client: &Client) -> Result<Response, reqwest::Error> {
     let body = prev_r.text().await?;
