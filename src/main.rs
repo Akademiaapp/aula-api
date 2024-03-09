@@ -8,7 +8,7 @@ mod unilogin;
 async fn main() {
 
     // Read the JSON file
-    let mut file = File::open("../user.json").expect("Failed to open JSON file");
+    let mut file = File::open("./user.json").expect("Failed to open JSON file");
     let mut contents = String::new();
     file.read_to_string(&mut contents).expect("Failed to read JSON file");
 
