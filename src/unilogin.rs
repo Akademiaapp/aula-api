@@ -2,19 +2,28 @@ use std::collections::HashMap;
 use reqwest;
 use reqwest::{Client, Response, Url};
 use reqwest::cookie::CookieStore;
-use scraper::{Html, Selector};
+use scraper::{node, Html, Selector};
+use serde_json::{json, to_string};
 
-
-fn find_form_action(prev_r: &String) -> String {
+fn find_form_action(prev_r: &String, name: Option<&String>) -> String {
+    // implementation here
     let document = Html::parse_document(&prev_r);
-    let selector = Selector::parse("form").unwrap();
+
+
+    let selector = if name.is_some() {
+        
+        Selector::parse(&format!("form[name=\"{}\"]", name.unwrap())).unwrap()
+    } else {
+        Selector::parse("form").unwrap()
+    };
     let form = document.select(&selector).next().unwrap();
     let action = form.value().attr("action").unwrap();
     action.to_string()
-}
+    }
+
 async fn post_form(prev_r: Response, data: String, client: &Client) -> Result<Response, reqwest::Error> {
     let body = prev_r.text().await?;
-    let action = find_form_action(&body);
+    let action = find_form_action(&body, None);
 
     println!("action: {}", action);
     
@@ -60,22 +69,16 @@ pub async fn unilogin(username: &str, password: &str) -> Result<Client, reqwest:
     r = post_form(r, "".to_string(), &client).await?;
 
     let text = r.text().await?;
-    let action = find_form_action(&text);
+    let action = find_form_action(&text, Some(&"saml-post-binding".to_string()));
     println!("action: {}", action);
 
     r = client.post(action)
         .form(&get_payload(&text).unwrap())
         .send()
         .await.unwrap();
-    {
-        println!("after google.com GET");
-        let store = cookie_store.lock().unwrap();
-        for c in store.iter_any() {
-            println!("c: {:?}", c);
-        }
-    }
-
+    
     println!("cookies");
+    
 
 
     for i in cookie_store.cookies( &Url::parse("https://www.aula.dk").unwrap() ) {
@@ -84,11 +87,42 @@ pub async fn unilogin(username: &str, password: &str) -> Result<Client, reqwest:
 
     //https://www.aula.dk/api/v18/?method=profiles.getProfilesByLogin
 
-    r = client.post("https://www.aula.dk/api/v18/?method=profiles.getProfilesByLogin")
+    r = client.get("https://www.aula.dk/api/v18/?method=profiles.getProfilesByLogin")
         .send()
         .await?;
 
+    println!("profile cookies: {:?}", r.headers().get("Set-Cookie"));
+    
+    println!("after google.com GET");
+     
+    
+
+    let csfrp_token = {
+        let store = cookie_store.lock().unwrap();
+        let x = store.iter_any().find(|c| c.name() == "Csrfp-Token").unwrap().value().to_string(); x
+    };
+
+    struct profile {
+        id: String,
+        name: String,
+        email: String,
+        role: String,
+        profile_picture: String,
+    }
+    let instProfileIds = r.json<profile>().await.unwrap()["instProfileId"].to_string();
+
+    
+    
+
     println!("{}", r.text().await?);
+    r = client
+        .post("https://www.aula.dk/api/v18/?method=calendar.getEventsByProfileIdsAndResourceIds")
+        .json(&[("instProfileIds", "[]"),("resourceIds", "[]"),("start", "2024-03-09 00:00:00.0000+01:00"),("end", "2024-04-09 23:59:59.9990+02:00")] )
+        .header("Csrfp-Token", csfrp_token)
+        .send()
+        .await?;
+    println!("{}", r.text().await?);
+
 
 
 
