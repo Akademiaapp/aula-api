@@ -1,12 +1,14 @@
 use std::collections::HashMap;
+
 use reqwest;
 use reqwest::{Client, Response, Url};
 use reqwest::cookie::CookieStore;
-use scraper::{node, Html, Selector};
-use serde_json::{json, to_string, Value};
+use scraper::{Html, Selector};
 use serde::Deserialize;
 use serde_derive::Serialize;
-use crate::getProfilesByLoginStruct::GetProfilesByLogin;
+use serde_json::Value;
+
+use crate::responseStructs::getProfilesByLoginStruct::GetProfilesByLogin;
 
 fn find_form_action(prev_r: &String, name: Option<&String>) -> String {
     // implementation here
