@@ -1,12 +1,12 @@
 use std::collections::HashMap;
 
 use reqwest;
-use reqwest::{Client, Response, Url};
-use reqwest::cookie::CookieStore;
+use reqwest::{Client, Response};
 use scraper::{Html, Selector};
 
-use crate::request_structs::get_events_by_profile_ids_and_resource_ids::GetEventsByProfileIdsAndResourceIds;
-use crate::response_structs::get_profiles_by_login::GetProfilesByLogin;
+use crate::request_structs::get_events_by_profile_ids_and_resource_ids::GetEventsByProfileIdsAndResourceIdsReq;
+use crate::response_structs::get_events_by_profile_ids_and_resource_ids::GetEventsByProfileIdsAndResourceIdsRes;
+use crate::response_structs::get_profiles_by_login::GetProfilesByLoginRes;
 
 fn find_form_action(prev_r: &String, name: Option<&String>) -> String {
     // implementation here
@@ -79,40 +79,26 @@ pub async fn unilogin(username: &str, password: &str) -> Result<Client, reqwest:
         .form(&get_payload(&text).unwrap())
         .send()
         .await.unwrap();
-    
-    println!("cookies");
-    
-
-
-    for i in cookie_store.cookies( &Url::parse("https://www.aula.dk").unwrap() ) {
-        println!("cookie: {:?}", i);
-    }
 
     //https://www.aula.dk/api/v18/?method=profiles.getProfilesByLogin
-
     r = client.get("https://www.aula.dk/api/v18/?method=profiles.getProfilesByLogin")
         .send()
         .await?;
 
-    println!("profile cookies: {:?}", r.headers().get("Set-Cookie"));
-    
-    println!("after google.com GET");
-     
-    
-
     let csfrp_token = {
         let store = cookie_store.lock().unwrap();
-        let x = store.iter_any().find(|c| c.name() == "Csrfp-Token").unwrap().value().to_string(); x
+        let x = store.iter_any().find(|c| c.name() == "Csrfp-Token").unwrap().value().to_string();
+        x
     };
 
-    let instProfileIds = r.json::<GetProfilesByLogin>().await.unwrap();
+    let inst_profile_ids = r.json::<GetProfilesByLoginRes>().await.unwrap();
 
 
-    let id = instProfileIds.data.profiles[0].institution_profiles[0].id;
+    let id = inst_profile_ids.data.profiles[0].institution_profiles[0].id;
 
 
-    let data = GetEventsByProfileIdsAndResourceIds {
-        inst_profile_ids: vec![instProfileIds.data.profiles[0].institution_profiles[0].id],
+    let data = GetEventsByProfileIdsAndResourceIdsReq {
+        inst_profile_ids: vec![id],
         resource_ids: vec![],
         start: "2024-03-10 00:00:00.0000+01:00".to_string(),
         end: "2024-04-10 23:59:59.9990+02:00".to_string()
@@ -125,7 +111,12 @@ pub async fn unilogin(username: &str, password: &str) -> Result<Client, reqwest:
         .header("Csrfp-Token", csfrp_token)
         .send()
         .await?;
-    println!("{}", r.text().await?);
+    // println!("{}", r.text().await?);
+
+
+    let response_data = r.json::<GetEventsByProfileIdsAndResourceIdsRes>().await?;
+
+    println!("title: {:?}", response_data.data[0].title);
 
     Ok(client)
 }
