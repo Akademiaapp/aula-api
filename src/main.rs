@@ -1,35 +1,40 @@
-use std::fs::File;
-use std::io::Read;
-use serde_json::Value;
+mod aulaHandler;
+
+use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder};
+use actix_web::web::Redirect;
 
 mod unilogin;
+
 mod response_structs;
 mod request_structs;
 
-
-#[tokio::main]
-async fn main() {
-
-    // Read the JSON file
-    let mut file = File::open("./user.json").expect("Failed to open JSON file");
-    let mut contents = String::new();
-    file.read_to_string(&mut contents).expect("Failed to read JSON file");
-
-
-    // Parse the JSON contents
-
-
-    let json: Value = serde_json::from_str(&contents).expect("Failed to parse JSON");
-
-    // Get the username and password from the JSON
-    let username = json["username"].as_str().expect("Failed to get username from JSON");
-    let password = json["password"].as_str().expect("Failed to get password from JSON");
-
-    // Call the unilogin function
-    let client = unilogin::unilogin(username, password).await;
+#[actix_web::main]
+async fn main() -> std::io::Result<()> {
+    HttpServer::new(|| {
+        App::new()
+            .service(hello)
+            .service(echo)
+    })
+        .bind(("127.0.0.1", 8080))?
+        .run()
+        .await
 }
 
-// Add the missing dependency 'unilogin' to your Cargo.toml file
-// cargo.toml
-// [dependencies]
-// unilogin = "0.1.0"
+#[get("/")]
+async fn hello() -> impl Responder {
+    HttpResponse::Ok().body("Hello world!")
+}
+
+#[get("/login")]
+async fn login() -> impl Responder {
+
+}
+
+#[post("/echo")]
+async fn echo(req_body: String) -> impl Responder {
+    HttpResponse::Ok().body(req_body)
+}
+
+async fn manual_hello() -> impl Responder {
+    HttpResponse::Ok().body("Hey there!")
+}
