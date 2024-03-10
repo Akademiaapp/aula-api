@@ -4,11 +4,9 @@ use reqwest;
 use reqwest::{Client, Response, Url};
 use reqwest::cookie::CookieStore;
 use scraper::{Html, Selector};
-use serde::Deserialize;
-use serde_derive::Serialize;
-use serde_json::Value;
 
-use crate::response_structs::getProfilesByLoginStruct::GetProfilesByLogin;
+use crate::request_structs::get_events_by_profile_ids_and_resource_ids::GetEventsByProfileIdsAndResourceIds;
+use crate::response_structs::get_profiles_by_login::GetProfilesByLogin;
 
 fn find_form_action(prev_r: &String, name: Option<&String>) -> String {
     // implementation here
@@ -113,9 +111,7 @@ pub async fn unilogin(username: &str, password: &str) -> Result<Client, reqwest:
     let id = instProfileIds.data.profiles[0].institution_profiles[0].id;
 
 
-
-
-    let data = data {
+    let data = GetEventsByProfileIdsAndResourceIds {
         inst_profile_ids: vec![instProfileIds.data.profiles[0].institution_profiles[0].id],
         resource_ids: vec![],
         start: "2024-03-10 00:00:00.0000+01:00".to_string(),
@@ -130,30 +126,6 @@ pub async fn unilogin(username: &str, password: &str) -> Result<Client, reqwest:
         .send()
         .await?;
     println!("{}", r.text().await?);
-
-
-
-
-    // ...
-
-    // let mut file = File::open("/path/to/credentials.json")?;
-    // let mut contents = String::new();
-    // file.read_to_string(&mut contents)?;
-
-    // let json: serde_json::Value = serde_json::from_str(&contents)?;
-
-    // let username = json["username"].as_str().unwrap();
-    // let password = json["password"].as_str().unwrap();
-
-    // ...
-
-    // r = post_form(r, &format!("username={}&password={}", username, password), &client).await?;
-    // let mut r: Response = post_form(resp, "selectedIdp=uni_idp", &client).await?;
-
-    // r = post_form(r, &HashMap::from([("username", username), ("password", password)]), &client).await?;
-
-    // let body = r.text().await?;
-    // println!("{}", body);
 
     Ok(client)
 }
