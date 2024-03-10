@@ -9,8 +9,8 @@ use crate::unilogin::{Session, unilogin};
 pub struct AulaSession {
     session: Session,
     profile_info: Data,
-    token: String,
-    php_session: String,
+    pub token: String,
+    pub php_session: String,
     id: i64
 }
 impl AulaSession {
