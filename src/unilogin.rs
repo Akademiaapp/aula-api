@@ -1,7 +1,9 @@
 use std::collections::HashMap;
+use std::sync::Arc;
 
 use reqwest;
 use reqwest::{Client, Response};
+use reqwest_cookie_store::CookieStoreMutex;
 use scraper::{Html, Selector};
 
 use crate::request_structs::get_events_by_profile_ids_and_resource_ids::GetEventsByProfileIdsAndResourceIdsReq;
@@ -38,7 +40,11 @@ async fn post_form(prev_r: Response, data: String, client: &Client) -> Result<Re
     Ok(res)
 }
 
-pub async fn unilogin(username: &str, password: &str) -> Result<Client, reqwest::Error> {
+pub struct Session {
+    pub client: Client,
+    pub cookie_store: Arc<CookieStoreMutex>
+}
+pub async fn unilogin(username: &str, password: &str) -> Result<Session, reqwest::Error> {
     let cookie_store  = reqwest_cookie_store::CookieStore::default();
     let cookie_store = reqwest_cookie_store::CookieStoreMutex::new(cookie_store);
     let cookie_store = std::sync::Arc::new(cookie_store);
@@ -47,7 +53,6 @@ pub async fn unilogin(username: &str, password: &str) -> Result<Client, reqwest:
         // .cookie_store(true)
         .cookie_provider(std::sync::Arc::clone(&cookie_store))
         .build()?;
-    
 
     let resp = client.get("https://www.aula.dk/auth/login.php?type=unilogin")
         .send()
@@ -80,45 +85,7 @@ pub async fn unilogin(username: &str, password: &str) -> Result<Client, reqwest:
         .send()
         .await.unwrap();
 
-    //https://www.aula.dk/api/v18/?method=profiles.getProfilesByLogin
-    r = client.get("https://www.aula.dk/api/v18/?method=profiles.getProfilesByLogin")
-        .send()
-        .await?;
-
-    let csfrp_token = {
-        let store = cookie_store.lock().unwrap();
-        let x = store.iter_any().find(|c| c.name() == "Csrfp-Token").unwrap().value().to_string();
-        x
-    };
-
-    let inst_profile_ids = r.json::<GetProfilesByLoginRes>().await.unwrap();
-
-
-    let id = inst_profile_ids.data.profiles[0].institution_profiles[0].id;
-
-
-    let data = GetEventsByProfileIdsAndResourceIdsReq {
-        inst_profile_ids: vec![id],
-        resource_ids: vec![],
-        start: "2024-03-10 00:00:00.0000+01:00".to_string(),
-        end: "2024-04-10 23:59:59.9990+02:00".to_string()
-    };
-
-    // println!("{}", r.text().await?);
-    r = client
-        .post("https://www.aula.dk/api/v18/?method=calendar.getEventsByProfileIdsAndResourceIds")
-        .json(&data)
-        .header("Csrfp-Token", csfrp_token)
-        .send()
-        .await?;
-    // println!("{}", r.text().await?);
-
-
-    let response_data = r.json::<GetEventsByProfileIdsAndResourceIdsRes>().await?;
-
-    println!("title: {:?}", response_data.data[0].title);
-
-    Ok(client)
+    Ok(Session { client, cookie_store })
 }
 
 fn get_payload(html_text: &str) -> Result<HashMap<String, String>, Box<dyn std::error::Error>> {
