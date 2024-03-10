@@ -3,6 +3,7 @@ use std::io::Read;
 use serde_json::Value;
 
 mod unilogin;
+mod getProfilesByLoginStruct;
 
 #[tokio::main]
 async fn main() {

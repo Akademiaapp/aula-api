@@ -3,7 +3,10 @@ use reqwest;
 use reqwest::{Client, Response, Url};
 use reqwest::cookie::CookieStore;
 use scraper::{node, Html, Selector};
-use serde_json::{json, to_string};
+use serde_json::{json, to_string, Value};
+use serde::Deserialize;
+use serde_derive::Serialize;
+use crate::getProfilesByLoginStruct::GetProfilesByLogin;
 
 fn find_form_action(prev_r: &String, name: Option<&String>) -> String {
     // implementation here
@@ -102,22 +105,32 @@ pub async fn unilogin(username: &str, password: &str) -> Result<Client, reqwest:
         let x = store.iter_any().find(|c| c.name() == "Csrfp-Token").unwrap().value().to_string(); x
     };
 
-    struct profile {
-        id: String,
-        name: String,
-        email: String,
-        role: String,
-        profile_picture: String,
+    let instProfileIds = r.json::<GetProfilesByLogin>().await.unwrap();
+
+
+    let id = instProfileIds.data.profiles[0].institution_profiles[0].id;
+
+
+    #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+    #[serde(rename_all = "camelCase")]
+    pub struct data {
+        pub inst_profile_ids: Vec<i64>,
+        pub resource_ids: Vec<Value>,
+        pub start: String,
+        pub end: String,
     }
-    let instProfileIds = r.json<profile>().await.unwrap()["instProfileId"].to_string();
 
-    
-    
+    let data = data {
+        inst_profile_ids: vec![instProfileIds.data.profiles[0].institution_profiles[0].id],
+        resource_ids: vec![],
+        start: "2024-03-10 00:00:00.0000+01:00".to_string(),
+        end: "2024-04-10 23:59:59.9990+02:00".to_string()
+    };
 
-    println!("{}", r.text().await?);
+    // println!("{}", r.text().await?);
     r = client
         .post("https://www.aula.dk/api/v18/?method=calendar.getEventsByProfileIdsAndResourceIds")
-        .json(&[("instProfileIds", "[]"),("resourceIds", "[]"),("start", "2024-03-09 00:00:00.0000+01:00"),("end", "2024-04-09 23:59:59.9990+02:00")] )
+        .json(&data)
         .header("Csrfp-Token", csfrp_token)
         .send()
         .await?;
