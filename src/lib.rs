@@ -1,1 +1,1 @@
-pub mod responseStructs;
+pub mod response_structs;

@@ -3,7 +3,8 @@ use std::io::Read;
 use serde_json::Value;
 
 mod unilogin;
-mod responseStructs;
+mod response_structs;
+mod request_structs;
 
 
 #[tokio::main]

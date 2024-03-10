@@ -8,7 +8,7 @@ use serde::Deserialize;
 use serde_derive::Serialize;
 use serde_json::Value;
 
-use crate::responseStructs::getProfilesByLoginStruct::GetProfilesByLogin;
+use crate::response_structs::getProfilesByLoginStruct::GetProfilesByLogin;
 
 fn find_form_action(prev_r: &String, name: Option<&String>) -> String {
     // implementation here
@@ -113,14 +113,7 @@ pub async fn unilogin(username: &str, password: &str) -> Result<Client, reqwest:
     let id = instProfileIds.data.profiles[0].institution_profiles[0].id;
 
 
-    #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
-    #[serde(rename_all = "camelCase")]
-    pub struct data {
-        pub inst_profile_ids: Vec<i64>,
-        pub resource_ids: Vec<Value>,
-        pub start: String,
-        pub end: String,
-    }
+
 
     let data = data {
         inst_profile_ids: vec![instProfileIds.data.profiles[0].institution_profiles[0].id],
