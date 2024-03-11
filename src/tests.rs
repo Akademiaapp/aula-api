@@ -53,6 +53,12 @@ mod tests {
         let aula_session = test_login().await;        
         let login_info = LoginInfo { token: aula_session.token, php_session: aula_session.php_session };
         let aula_session = aulaHandler::AulaSession::from_cookies(login_info.token, login_info.php_session).await;
+        let evensts = aula_session.request_events(
+            "2024-03-09T08:35:11+00:00".to_string(), 
+            "2024-03-11T08:35:11+00:00".to_string()
+        ).await.unwrap();
+
+        println!("{:?}", evensts);
     }
 
 }
