@@ -40,15 +40,15 @@ impl AulaSession {
         let cookie_store = reqwest_cookie_store::CookieStoreMutex::new(cookie_store);
         let cookie_store = std::sync::Arc::new(cookie_store);
 
-// create the HTTP client
+        // create the HTTP client
         let client = Client::builder()
             .cookie_provider(Arc::clone(&cookie_store))
-            .cookie_store(true)
+            // .cookie_store(true)
             .build()
             .unwrap();
 
 
-// Add some cookies
+        // Add some cookies
 //         let php_cookie =HeaderValue::from_static (
 //             format!("PHPSESSID={}; Domain=.aula.dk", php_session).as_str().clone()
 //         );
@@ -56,8 +56,8 @@ impl AulaSession {
         let token_str = format!("Csrfp-Token={}; Domain=www.aula.dk", token);
         let token_cookie = HeaderValue::from_str(&token_str).unwrap();
 
-        let php_str = format!("PHPSESSID={}; Domain=.aula.dk", php_session);
-        let php_cookie = HeaderValue::from_str(&token_str).unwrap();
+        let php_str = format!("PHPSESSID={}; Domain=aula.dk", php_session);
+        let php_cookie = HeaderValue::from_str(&php_str).unwrap();
 
 
 
