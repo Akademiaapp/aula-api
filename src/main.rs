@@ -1,8 +1,8 @@
-use crate::aulaHandler::{AulaSession, LoginInfo};
+use actix_web::{App, get, HttpResponse, HttpServer, post, Responder};
 use actix_web::web::Json;
-use actix_web::{get, post, App, HttpResponse, HttpServer, Responder};
-use serde_derive::{Deserialize, Serialize};
-use std::time::Instant;
+use serde_derive::Deserialize;
+
+use crate::aulaHandler::{AulaSession, LoginInfo};
 
 mod aulaHandler;
 
@@ -17,8 +17,6 @@ mod util;
 async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
-            .service(hello)
-            .service(echo)
             .service(login)
             .service(get_events)
             .service(get_notifs)
@@ -26,11 +24,6 @@ async fn main() -> std::io::Result<()> {
     .bind(("127.0.0.1", 8080))?
     .run()
     .await
-}
-
-#[get("/login")]
-async fn hello() -> impl Responder {
-    HttpResponse::Ok().body("Hello world!")
 }
 
 #[derive(Deserialize)]
@@ -64,7 +57,7 @@ async fn get_events(info: Json<EventRequest>) -> impl Responder {
     HttpResponse::Ok().json(events)
 }
 
-#[get("/getNotifications")]
+#[post("/getNotifications")]
 async fn get_notifs(info: Json<LoginInfo>) -> impl Responder {
 
     let aula_session = AulaSession::from_login_info(&info.into_inner()).await;
@@ -88,12 +81,3 @@ async fn get_notifs(info: Json<LoginInfo>) -> impl Responder {
 //
 //     HttpResponse::Ok().json(res)
 // }
-
-#[post("/echo")]
-async fn echo(req_body: String) -> impl Responder {
-    HttpResponse::Ok().body(req_body)
-}
-
-async fn manual_hello() -> impl Responder {
-    HttpResponse::Ok().body("Hey there!")
-}
