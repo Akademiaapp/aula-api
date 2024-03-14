@@ -1,16 +1,17 @@
-use actix_web::{App, get, HttpResponse, HttpServer, post, Responder};
+use crate::aulaHandler::{AulaSession, LoginInfo};
 use actix_web::web::Json;
+use actix_web::{get, post, App, HttpResponse, HttpServer, Responder};
 use serde_derive::{Deserialize, Serialize};
+use std::time::Instant;
 
 mod aulaHandler;
 
 mod unilogin;
 
-mod response_structs;
 mod request_structs;
-mod util;
+mod response_structs;
 mod tests;
-
+mod util;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -21,11 +22,10 @@ async fn main() -> std::io::Result<()> {
             .service(login)
             .service(get_events)
             .service(get_notifs)
-
     })
-        .bind(("127.0.0.1", 8080))?
-        .run()
-        .await
+    .bind(("127.0.0.1", 8080))?
+    .run()
+    .await
 }
 
 #[get("/login")]
@@ -39,41 +39,43 @@ pub struct LoginRequest {
     password: String,
 }
 
-#[derive(Serialize, Deserialize)]
-pub struct LoginInfo {
-    token: String,
-    php_session: String,
-}
-
 #[post("/login")]
 async fn login(info: Json<LoginRequest>) -> impl Responder {
     println!("hi");
-    let aula_session = aulaHandler::AulaSession::from_credentials(&info.username, &info.password).await;
+    let aula_session = AulaSession::from_credentials(&info.username, &info.password).await;
 
-    HttpResponse::Ok().json(LoginInfo { token: aula_session.token, php_session: aula_session.php_session })
+    HttpResponse::Ok().json(aula_session.get_login_info())
 }
 
 #[derive(Deserialize)]
 struct EventRequest {
     login_info: LoginInfo,
     start: String,
-    end: String
+    end: String,
 }
 
 #[post("/getCalenderEvents")]
 async fn get_events(info: Json<EventRequest>) -> impl Responder {
-    let aula_session = aulaHandler::AulaSession::from_cookies(info.login_info.token.clone(), info.login_info.php_session.clone()).await;
-    let events = aula_session.request_events(info.start.to_string(), info.end.to_string()).await.unwrap();
+    let aula_session = AulaSession::from_login_info(&info.login_info).await;
+    let events = aula_session
+        .request_events(info.start.to_string(), info.end.to_string())
+        .await
+        .unwrap();
     HttpResponse::Ok().json(events)
 }
 
 #[get("/getNotifications")]
-pub async fn get_notifs(info: Json<LoginInfo>) -> impl Responder {
-    let aula_session = aulaHandler::AulaSession::from_cookies(info.token, info.php_session).await;
+async fn get_notifs(info: Json<LoginInfo>) -> impl Responder {
+    let aula_session = AulaSession::from_login_info(&info.into_inner()).await;
 
     let url = format!("https://www.aula.dk/api/v18/?method=notifications.getNotificationsForActiveProfile&activeInstitutionCodes[]={}", aula_session.institution_code);
 
+    let start = Instant::now();
     let res = aula_session.request_get(url).await.unwrap();
+    println!(
+        "Time elapsed in expensive_function() is: {:?}",
+        start.elapsed()
+    );
 
     HttpResponse::Ok().json(res)
 }
