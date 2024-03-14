@@ -2,9 +2,9 @@ use actix_web::{App, HttpResponse, HttpServer, post, Responder};
 use actix_web::web::Json;
 use serde_derive::Deserialize;
 
-use crate::aulaHandler::{AulaSession, LoginInfo};
+use crate::aula_handler::{AulaSession, LoginInfo};
 
-mod aulaHandler;
+mod aula_handler;
 
 mod unilogin;
 

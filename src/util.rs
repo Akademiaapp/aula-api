@@ -10,7 +10,7 @@ pub fn get_current_time_in_js_format(time_zone_offset: i32) -> String {
 }
 
 pub fn compress_events(events: &mut Vec<Daum>) -> Vec<Daum> {
-    let mut newVec = Vec::<Daum>::new();
+    let mut new_vec = Vec::<Daum>::new();
 
     for a in events.iter() {
         let m = true;
@@ -19,19 +19,19 @@ pub fn compress_events(events: &mut Vec<Daum>) -> Vec<Daum> {
                 if a.end_date_time == b.start_date_time {
                     let mut new = a.clone();
                     new.end_date_time = b.end_date_time.clone();
-                    newVec.push(new);
+                    new_vec.push(new);
                     println!("compressed");
                     break;
                 } else {
                     if a.start_date_time == b.end_date_time {
                         break;
                     }
-                    newVec.push(a.clone());
+                    new_vec.push(a.clone());
                     break;
                 }
             }
         }
     }
 
-    newVec
+    new_vec
 }

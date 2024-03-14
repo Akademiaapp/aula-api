@@ -6,13 +6,13 @@ mod tests {
 
     use serde_json::Value;
 
-    use crate::aulaHandler;
+    use crate::aula_handler;
     use crate::response_structs::get_new_threads::GetNewThreadsRes;
     use crate::response_structs::messaging_get_threads::MessagingGetThreadsRes;
     use crate::util::get_current_time_in_js_format;
     use crate::LoginInfo;
 
-    async fn test_login() -> aulaHandler::AulaSession {
+    async fn test_login() -> aula_handler::AulaSession {
         let mut file = File::open("./user.json").expect("Failed to open JSON file");
         let mut contents = String::new();
         file.read_to_string(&mut contents)
@@ -32,7 +32,7 @@ mod tests {
 
         // Call the unilogin function
 
-        let aula_session = aulaHandler::AulaSession::from_credentials(username, password).await;
+        let aula_session = aula_handler::AulaSession::from_credentials(username, password).await;
         aula_session
     }
 
@@ -57,7 +57,7 @@ mod tests {
     async fn test_reuse_client() {
         let aula_session = test_login().await;
         let aula_session =
-            aulaHandler::AulaSession::from_login_info(&aula_session.get_login_info()).await;
+            aula_handler::AulaSession::from_login_info(&aula_session.get_login_info()).await;
         let events = aula_session
             .request_events(
                 "2024-03-09T08:35:11+00:00".to_string(),
