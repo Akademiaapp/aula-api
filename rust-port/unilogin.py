@@ -16,11 +16,10 @@ def unilogin(username, password):
     resp = session.get("https://www.aula.dk/auth/login.php?type=unilogin", follow_redirects=False)
 
     resp = session.get(resp.headers["location"], follow_redirects=False)
-    href = resp.headers["location"]
-
-    r = session.get(href, follow_redirects=False)
     
-        
+    href = resp.headers["location"]
+    r = session.get(href, follow_redirects=False)
+
     r = postForm(r, {"selectedIdp": "uni_idp"}, session)
 
     r = postForm(r, {"username": username}, session)

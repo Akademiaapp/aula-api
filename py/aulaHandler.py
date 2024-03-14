@@ -24,7 +24,8 @@ class aulaHandler:
                 "start": start_date,
                 "end": end_date,
                 }
-        
+
+
     
         r = self.session.post("https://www.aula.dk/api/v18/?method=calendar.getEventsByProfileIdsAndResourceIds", json=data, headers={"Csrfp-Token": self.token})
         rData = json.loads(r.text)["data"]
