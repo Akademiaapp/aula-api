@@ -2,9 +2,10 @@
 A rather simple API for interaction with the Danish school platform [Aula](https://aulainfo.dk/). When starting the API it opens endpoints for interacting with Aula's functionalities.
 
 ## Technologies Used
-- Python: Selected Python for backend development due to its simplicity, readability, and extensive library ecosystem.
-- FastAPI: FastAPI makes it possible to develop rubust APIs, with rapid iteration and minimal code.
-- HTTPX: The python HTTPX library is used to interact with the Aula platform.
+- [Rust](https://www.rust-lang.org/) - A systems programming language that runs blazingly fast, prevents segfaults, and guarantees thread safety.
+- [Cargo](https://doc.rust-lang.org/cargo/) - Package manager for Rust.
+- [Actix](https://actix.rs/) - A powerful, pragmatic, and extremely fast web framework for Rust. Used for the APi endpoints.
+- [reqwest](https://docs.rs/reqwest/0.11.4/reqwest/) - An ergonomic, batteries-included HTTP Client for Rust.
 
 # API Documentation
 
