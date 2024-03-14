@@ -148,4 +148,14 @@ impl AulaSession {
 
         Ok(r.text().await?)
     }
+
+    pub async fn request_get(&self, url: String) -> Result<String, reqwest::Error> {
+        let r = self.session.client
+            .get(url)
+            // .header("Csrfp-Token", &self.token)
+            .send()
+            .await?;
+
+        Ok(r.text().await?)
+    }
 }

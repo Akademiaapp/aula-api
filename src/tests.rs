@@ -3,9 +3,12 @@ mod tests {
 
     use std::fs::File;
     use std::io::Read;
+    use std::thread::sleep;
+    use std::time::Duration;
     use serde_json::Value;
 
     use crate::response_structs::get_events_by_profile_ids_and_resource_ids::Daum;
+    use crate::response_structs::get_new_threads::GetNewThreadsRes;
     use crate::response_structs::messaging_get_threads::MessagingGetThreadsRes;
     use crate::unilogin;
 
@@ -13,6 +16,7 @@ mod tests {
     use crate::util::compress_events;
     use crate::util::get_current_time_in_js_format;
     use crate::LoginInfo;
+    use std::io::{self, Write};
 
     use super::*;
 
@@ -113,8 +117,30 @@ mod tests {
     async fn test_msg_pulling() {
         let aula_session = test_login().await;
 
-        let text = aula_session.request_all_messages('0'.to_string()).await.unwrap();
+        // let text = aula_session.request_all_messages('0'.to_string()).await.unwrap();
+        let mut time = get_current_time_in_js_format(1).replace("+", "%2B");
 
+        for i in 0..300 {
+            
+            // https://www.aula.dk/api/v18/?method=messaging.getNewThreads&lastPollingTimestamp=2024-03-14T12:25:18%2B01:00&page=0
+            let url = format!("https://www.aula.dk/api/v18/?method=messaging.getNewThreads&lastPollingTimestamp={}&page=0", time);
+            let text = aula_session.request_get(url).await.unwrap();
+
+            let info = serde_json::from_str::<GetNewThreadsRes>(&text).unwrap();
+
+            if info.data.more_messages_exist {
+                println!("");
+                println!("{:?}", info.data.threads)
+            } else {
+                print!(".");
+                io::stdout().flush().unwrap();
+            }
+            time = get_current_time_in_js_format(1).replace("+", "%2B");
+
+            // tokio::time::sleep(Duration::from_secs(5)).await;
+            tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
+
+        }
     }
 
     #[test]
