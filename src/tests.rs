@@ -87,37 +87,61 @@ mod tests {
         
         let mut events = Vec::<Test>::new();
         events.push(Test { a: 1, b: 2 });
-        events.push(Test { a: 1, b: 2 });
+        // events.push(Test { a: 1, b: 2 });
         events.push(Test { a: 2, b: 3 });
         events.push(Test { a: 3, b: 4 });
         events.push(Test { a: 5, b: 6 });
 
         let mut newVec = Vec::<Test>::new();
 
-        for a in events.iter() {
-            let mut last = a.b.clone();
-            for b in events.iter() {
-                if a.a == b.b {
-                    last = -1;
-                    break
-                } else { if a.b == b.a {
+    //     for a in events.iter() {
+    //         let mut last = a.b.clone();
+    //         for b in events.iter() {
+    //             if a.a == b.b {
+    //                 last = -1;
+    //                 break
+    //             } else { if a.b == b.a {
                     
-                    last = b.b.clone();
-                    continue;
-                } }
+    //                 last = b.b.clone();
+    //                 continue;
+    //             } }
                 
     
-            }
+    //         }
             
-            if last == -1 {continue;}
-            let mut new = a.clone();
-            new.b = last;
-            newVec.push(new);
+    //         if last == -1 {continue;}
+    //         let mut new = a.clone();
+    //         new.b = last;
+    //         newVec.push(new);
             
-        }
+    //     }
     
+
+        for a in events.iter() {
+            let mut m = true;
+
+            for b in events.iter() {
+                if a.b == b.a {
+                    let mut new = a.clone();
+                    new.b = b.b.clone();
+                    newVec.push(new);
+                    println!("compressed");
+                    m = false;
+                    break;
+                } else { if a.a == b.b {
+                    m = false;
+                    break;
+                }}
+            }
+            if m {
+
+                newVec.push(a.clone());
+            }
+        }
+
         println!("Length of newVec: {}", newVec.len());
         println!("{:?}", newVec);
+
 
     }
 
