@@ -6,6 +6,7 @@ use reqwest::header::HeaderValue;
 use crate::request_structs::get_events_by_profile_ids_and_resource_ids::GetEventsByProfileIdsAndResourceIdsReq;
 use crate::response_structs::get_events_by_profile_ids_and_resource_ids::{Daum, GetEventsByProfileIdsAndResourceIdsRes};
 use crate::response_structs::get_profiles_by_login::{Data, GetProfilesByLoginRes};
+use crate::response_structs::messaging_get_threads::MessagingGetThreadsRes;
 use crate::unilogin;
 use crate::unilogin::{Session, unilogin};
 
@@ -129,5 +130,22 @@ impl AulaSession {
         let result: Vec<Daum> = response_data.data;
 
         Ok(result)
+    }
+
+    pub async fn request_all_messages(&self, page: String) -> Result<String, reqwest::Error> {
+        
+        
+
+        // println!("{}", r.text().await?);
+        let r = self.session.client
+            .get(format!("https://www.aula.dk/api/v18/?method=messaging.getThreads&sortOn=date&orderDirection=desc&page={}", page).as_str())
+            .header("Csrfp-Token", &self.token)
+            .send()
+            .await?;
+
+
+        
+
+        Ok(r.text().await?)
     }
 }

@@ -6,6 +6,7 @@ mod tests {
     use serde_json::Value;
 
     use crate::response_structs::get_events_by_profile_ids_and_resource_ids::Daum;
+    use crate::response_structs::messaging_get_threads::MessagingGetThreadsRes;
     use crate::unilogin;
 
     use crate::aulaHandler;
@@ -76,6 +77,46 @@ mod tests {
         println!("Time with timezone: {}", time);
     }
 
+    #[tokio::test]
+    #[ignore]
+    async fn test_get_all_msg() {
+        println!("hi");
+
+        let aula_session = test_login().await;
+
+        let text = aula_session.request_all_messages('0'.to_string()).await.unwrap();
+
+        
+        let mut data: MessagingGetThreadsRes = serde_json::from_str(&text).expect("Failed to parse JSON");
+        
+        println!("{:?}", data);
+
+        let mut i = 0;
+
+        while data.data.more_messages_exist {
+            i += 1;
+
+            let text = aula_session.request_all_messages(i.to_string()).await.unwrap();
+
+        
+            data = serde_json::from_str(&text).expect("Failed to parse JSON");
+       
+        }
+
+        println!("{:?}", i);  
+    }
+
+
+
+    #[tokio::test]
+    #[ignore]
+    async fn test_msg_pulling() {
+        let aula_session = test_login().await;
+
+        let text = aula_session.request_all_messages('0'.to_string()).await.unwrap();
+
+    }
+
     #[test]
     fn hi() {
 
@@ -134,7 +175,6 @@ mod tests {
                 }}
             }
             if m {
-
                 newVec.push(a.clone());
             }
         }
