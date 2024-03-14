@@ -1,21 +1,20 @@
+use std::sync::Arc;
+
+use reqwest::{Client, Url};
+use reqwest::cookie::CookieStore;
+use reqwest::header::HeaderValue;
+use serde_derive::{Deserialize, Serialize};
+use serde_json::Value;
+
 use crate::request_structs::get_events_by_profile_ids_and_resource_ids::GetEventsByProfileIdsAndResourceIdsReq;
 use crate::response_structs::get_events_by_profile_ids_and_resource_ids::{
     Daum, GetEventsByProfileIdsAndResourceIdsRes,
 };
 use crate::response_structs::get_profiles_by_login::{Data, GetProfilesByLoginRes};
-use crate::unilogin::{unilogin, Session};
-use actix_web::web::Json;
-use reqwest::cookie::{CookieStore, Jar};
-use reqwest::header::HeaderValue;
-use reqwest::{Client, Url};
-use serde_derive::{Deserialize, Serialize};
-use serde_json::{json, Value};
-use std::fmt::Error;
-use std::sync::Arc;
+use crate::unilogin::{Session, unilogin};
 
 #[derive(Serialize, Deserialize)]
 pub struct LoginInfo {
-    profile_info: Data,
     token: String,
     php_session: String,
     id: i64,
@@ -24,7 +23,6 @@ pub struct LoginInfo {
 
 pub struct AulaSession {
     session: Session,
-    profile_info: Data,
     pub token: String,
     pub php_session: String,
     id: i64,
@@ -52,7 +50,6 @@ impl AulaSession {
 
         Self {
             session,
-            profile_info,
             token,
             php_session,
             id,
@@ -62,7 +59,6 @@ impl AulaSession {
 
     pub(crate) fn get_login_info(&self) -> LoginInfo {
         LoginInfo {
-            profile_info: self.profile_info.clone(),
             token: self.token.clone(),
             php_session: self.php_session.clone(),
             id: self.id,
@@ -76,7 +72,6 @@ impl AulaSession {
 
         Self {
             session,
-            profile_info: info.profile_info.clone(),
             token: info.token.clone(),
             php_session: info.php_session.clone(),
             id: info.id,

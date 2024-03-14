@@ -76,6 +76,19 @@ async fn get_notifs(info: Json<LoginInfo>) -> impl Responder {
     HttpResponse::Ok().json(res)
 }
 
+// #[get("/getMessages")]
+// async fn get_messages(info: web::Query<HashMap<String, String>>) -> impl Responder {
+//     let page = info.get("page").unwrap_or(&"0".to_string());
+//
+//     let aula_session = AulaSession::from_login_info(&info.into_inner()).await;
+//
+//     let url = format!("https://www.aula.dk/api/v18/?method=messaging.getMessages&page={}", page);
+//
+//     let res = aula_session.request_get(url).await.unwrap();
+//
+//     HttpResponse::Ok().json(res)
+// }
+
 #[post("/echo")]
 async fn echo(req_body: String) -> impl Responder {
     HttpResponse::Ok().body(req_body)
