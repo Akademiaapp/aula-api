@@ -5,9 +5,11 @@ mod tests {
     use std::io::Read;
     use serde_json::Value;
 
+    use crate::response_structs::get_events_by_profile_ids_and_resource_ids::Daum;
     use crate::unilogin;
 
     use crate::aulaHandler;
+    use crate::util::compress_events;
     use crate::util::get_current_time_in_js_format;
     use crate::LoginInfo;
 
@@ -54,12 +56,16 @@ mod tests {
         let aula_session = test_login().await;        
         let login_info = LoginInfo { token: aula_session.token, php_session: aula_session.php_session };
         let aula_session = aulaHandler::AulaSession::from_cookies(login_info.token, login_info.php_session).await;
-        let evensts = aula_session.request_events(
+        let mut events = aula_session.request_events(
             "2024-03-09T08:35:11+00:00".to_string(), 
             "2024-03-11T08:35:11+00:00".to_string()
         ).await.unwrap();
 
-        println!("{:?}", evensts);
+        println!("events len before compression{:?}", events.len());
+        
+        println!("events len after compression{:?}", compress_events(&mut events).len());
+
+        println!("{:?}", events);
     }
 
     #[test]

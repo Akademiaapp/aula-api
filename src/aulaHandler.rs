@@ -101,6 +101,8 @@ impl AulaSession {
         profile_info.data
     }
 
+
+
     pub async fn request_events(&self, start: String, end: String) -> Result<Vec<Daum>, reqwest::Error> {
         let data = GetEventsByProfileIdsAndResourceIdsReq {
             inst_profile_ids: vec![self.id],
@@ -124,7 +126,8 @@ impl AulaSession {
 
         println!("{:?}", response_data);
 
-        let result = response_data.data;
+        let result: Vec<Daum> = response_data.data;
+
         Ok(result)
     }
 }
