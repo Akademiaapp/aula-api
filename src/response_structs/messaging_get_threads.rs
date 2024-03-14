@@ -48,7 +48,7 @@ pub struct Thread {
     pub muted: bool,
     pub marked: bool,
     pub sensitive: bool,
-    pub last_read_message_id: String,
+    pub last_read_message_id: Option<String>,
     pub is_archived: bool,
     pub mail_box_owner: MailBoxOwner3,
     pub institution_code: String,

@@ -10,7 +10,7 @@ mod tests {
     use crate::response_structs::get_events_by_profile_ids_and_resource_ids::Daum;
     use crate::response_structs::get_new_threads::GetNewThreadsRes;
     use crate::response_structs::messaging_get_threads::MessagingGetThreadsRes;
-    use crate::unilogin;
+    use crate::{get_notifs, unilogin};
 
     use crate::aulaHandler;
     use crate::util::compress_events;
@@ -38,7 +38,7 @@ mod tests {
         // Call the unilogin function
         
 
-        let aula_session = aulaHandler::AulaSession::new(username, password).await;
+        let aula_session = aulaHandler::AulaSession::from_credentials(username, password).await;
         aula_session
     }
 
@@ -61,14 +61,10 @@ mod tests {
         let aula_session = test_login().await;        
         let login_info = LoginInfo { token: aula_session.token, php_session: aula_session.php_session };
         let aula_session = aulaHandler::AulaSession::from_cookies(login_info.token, login_info.php_session).await;
-        let mut events = aula_session.request_events(
+        let events = aula_session.request_events(
             "2024-03-09T08:35:11+00:00".to_string(), 
             "2024-03-11T08:35:11+00:00".to_string()
         ).await.unwrap();
-
-        println!("events len before compression{:?}", events.len());
-        
-        println!("events len after compression{:?}", compress_events(&mut events).len());
 
         println!("{:?}", events);
     }
@@ -88,7 +84,9 @@ mod tests {
 
         let aula_session = test_login().await;
 
-        let text = aula_session.request_all_messages('0'.to_string()).await.unwrap();
+        let text: String = aula_session.request_all_messages('0'.to_string()).await.unwrap();
+
+        println!("{:?}", text);
 
         
         let mut data: MessagingGetThreadsRes = serde_json::from_str(&text).expect("Failed to parse JSON");
@@ -115,6 +113,9 @@ mod tests {
     #[tokio::test]
     #[ignore]
     async fn test_msg_pulling() {
+        println!("hi");
+
+
         let aula_session = test_login().await;
 
         // let text = aula_session.request_all_messages('0'.to_string()).await.unwrap();

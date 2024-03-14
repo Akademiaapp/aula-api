@@ -20,6 +20,7 @@ async fn main() -> std::io::Result<()> {
             .service(echo)
             .service(login)
             .service(get_events)
+            .service(get_notifs)
 
     })
         .bind(("127.0.0.1", 8080))?
@@ -47,7 +48,7 @@ pub struct LoginInfo {
 #[post("/login")]
 async fn login(info: Json<LoginRequest>) -> impl Responder {
     println!("hi");
-    let aula_session = aulaHandler::AulaSession::new(&info.username, &info.password).await;
+    let aula_session = aulaHandler::AulaSession::from_credentials(&info.username, &info.password).await;
 
     HttpResponse::Ok().json(LoginInfo { token: aula_session.token, php_session: aula_session.php_session })
 }
@@ -66,6 +67,16 @@ async fn get_events(info: Json<EventRequest>) -> impl Responder {
     HttpResponse::Ok().json(events)
 }
 
+#[get("/getNotifications")]
+pub async fn get_notifs(info: Json<LoginInfo>) -> impl Responder {
+    let aula_session = aulaHandler::AulaSession::from_cookies(info.token, info.php_session).await;
+
+    let url = format!("https://www.aula.dk/api/v18/?method=notifications.getNotificationsForActiveProfile&activeInstitutionCodes[]={}", aula_session.institution_code);
+
+    let res = aula_session.request_get(url).await.unwrap();
+
+    HttpResponse::Ok().json(res)
+}
 
 #[post("/echo")]
 async fn echo(req_body: String) -> impl Responder {
