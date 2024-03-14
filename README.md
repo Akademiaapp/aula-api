@@ -67,5 +67,9 @@ The API currently provides the following endpoints:
   - Returns a JSON object containing the notifications for the user.
 
 ### Todo
-- Add more endpoints for more functionality.
-- Implement better login handling using sessions for improved speed.
+- [ ] Add more endpoints for more functionality.
+  - [x] Endpoint for login
+  - [x] Endpoint for calendar events
+  - [x] Endpoint for user notifications
+  - [ ] Endpoint for user messages
+- [x] Implement better login handling using sessions for improved speed.
