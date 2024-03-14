@@ -14,19 +14,23 @@ pub fn compress_events(events: &mut Vec<Daum>) -> Vec<Daum> {
     let mut newVec = Vec::<Daum>::new();
 
     for a in events.iter() {
-        for b in events.iter() {
-            if a.end_date_time == b.start_date_time {
-                let mut new = a.clone();
-                new.end_date_time = b.end_date_time.clone();
-                newVec.push(new);
-                println!("compressed");
+        let mut m = true;
+        while m {
+            
+            for b in events.iter() {
+                if a.end_date_time == b.start_date_time {
+                    let mut new = a.clone();
+                    new.end_date_time = b.end_date_time.clone();
+                    newVec.push(new);
+                    println!("compressed");
+                    break;
+                } else { if a.start_date_time == b.end_date_time {
+                    break;
+                }
+                newVec.push(a.clone());
                 break;
-            } else { if a.start_date_time == b.end_date_time {
-                continue;
-            }
-            newVec.push(a.clone());
-            break;
-
+    
+                }
             }
         }
     }

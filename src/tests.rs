@@ -76,4 +76,49 @@ mod tests {
         println!("Time with timezone: {}", time);
     }
 
+    #[test]
+    fn hi() {
+
+        #[derive(Clone, Debug)]
+        struct Test {
+            a: i32,
+            b: i32
+        }
+        
+        let mut events = Vec::<Test>::new();
+        events.push(Test { a: 1, b: 2 });
+        events.push(Test { a: 1, b: 2 });
+        events.push(Test { a: 2, b: 3 });
+        events.push(Test { a: 3, b: 4 });
+        events.push(Test { a: 5, b: 6 });
+
+        let mut newVec = Vec::<Test>::new();
+
+        for a in events.iter() {
+            let mut last = a.b.clone();
+            for b in events.iter() {
+                if a.a == b.b {
+                    last = -1;
+                    break
+                } else { if a.b == b.a {
+                    
+                    last = b.b.clone();
+                    continue;
+                } }
+                
+    
+            }
+            
+            if last == -1 {continue;}
+            let mut new = a.clone();
+            new.b = last;
+            newVec.push(new);
+            
+        }
+    
+        println!("Length of newVec: {}", newVec.len());
+        println!("{:?}", newVec);
+
+    }
+
 }
