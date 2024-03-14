@@ -1,6 +1,7 @@
 # Aula API
 A rather simple API for interaction with the Danish school platform [Aula](https://aulainfo.dk/). When starting the API it opens endpoints for interacting with Aula's functionalities.
 
+
 ## Technologies Used
 - [Rust](https://www.rust-lang.org/) - A systems programming language that runs blazingly fast, prevents segfaults, and guarantees thread safety.
 - [Cargo](https://doc.rust-lang.org/cargo/) - Package manager for Rust.
@@ -8,6 +9,32 @@ A rather simple API for interaction with the Danish school platform [Aula](https
 - [reqwest](https://docs.rs/reqwest/0.11.4/reqwest/) - An ergonomic, batteries-included HTTP Client for Rust.
 
 # API Documentation
+
+
+## Running the API
+
+To run the API, you will need to have Rust and Cargo installed on your machine. If you don't have them installed, you can download them from [here](https://www.rust-lang.org/tools/install).
+
+Once you have Rust and Cargo installed, you can clone the repository and navigate to the project directory:
+
+```bash
+git clone https://github.com/Akademiaapp/aula-api
+cd aula-api
+```
+
+Then, you can run the API using Cargo. By default, the API will run on port 8080. If you want to specify a different port, you can do so by providing it as a command line argument:
+
+```bash
+cargo run <port>
+```
+
+For example, to run the API on port 3000, you would use the following command:
+
+```bash
+cargo run 3000
+```
+
+The API will now be running and listening for requests on the specified port.
 
 ## Endpoints
 The API currently provides the following endpoints:

@@ -15,13 +15,19 @@ mod util;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    let args: Vec<String> = std::env::args().collect();
+    let port = if args.len() > 1 {
+        args[1].parse().unwrap_or(8080)
+    } else {
+        8080
+    };
     HttpServer::new(|| {
         App::new()
             .service(login)
             .service(get_events)
             .service(get_notifs)
     })
-    .bind(("127.0.0.1", 8080))?
+    .bind(("127.0.0.1", port))?
     .run()
     .await
 }
