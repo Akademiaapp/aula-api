@@ -6,9 +6,9 @@ use reqwest::{Client, Response};
 use reqwest_cookie_store::CookieStoreMutex;
 use scraper::{Html, Selector};
 
-use crate::request_structs::get_events_by_profile_ids_and_resource_ids::GetEventsByProfileIdsAndResourceIdsReq;
-use crate::response_structs::get_events_by_profile_ids_and_resource_ids::GetEventsByProfileIdsAndResourceIdsRes;
-use crate::response_structs::get_profiles_by_login::GetProfilesByLoginRes;
+
+
+
 
 fn find_form_action(prev_r: &String, name: Option<&String>) -> String {
     // implementation here

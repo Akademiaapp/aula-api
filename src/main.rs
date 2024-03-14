@@ -1,4 +1,4 @@
-use actix_web::{App, get, HttpResponse, HttpServer, post, Responder};
+use actix_web::{App, HttpResponse, HttpServer, post, Responder};
 use actix_web::web::Json;
 use serde_derive::Deserialize;
 

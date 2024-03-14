@@ -13,7 +13,7 @@ pub fn compress_events(events: &mut Vec<Daum>) -> Vec<Daum> {
     let mut newVec = Vec::<Daum>::new();
 
     for a in events.iter() {
-        let mut m = true;
+        let m = true;
         while m {
             for b in events.iter() {
                 if a.end_date_time == b.start_date_time {
