@@ -8,7 +8,9 @@ mod unilogin;
 
 mod response_structs;
 mod request_structs;
+mod util;
 mod tests;
+
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {

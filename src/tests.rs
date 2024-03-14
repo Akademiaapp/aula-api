@@ -8,6 +8,7 @@ mod tests {
     use crate::unilogin;
 
     use crate::aulaHandler;
+    use crate::util::get_current_time_in_js_format;
     use crate::LoginInfo;
 
     use super::*;
@@ -59,6 +60,14 @@ mod tests {
         ).await.unwrap();
 
         println!("{:?}", evensts);
+    }
+
+    #[test]
+    fn js_time() {
+        let time = get_current_time_in_js_format(0);
+        println!("Time without timezone: {}", time);
+        let time = get_current_time_in_js_format(1);
+        println!("Time with timezone: {}", time);
     }
 
 }
