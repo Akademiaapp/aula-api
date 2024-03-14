@@ -9,7 +9,7 @@ use reqwest::cookie::{CookieStore, Jar};
 use reqwest::header::HeaderValue;
 use reqwest::{Client, Url};
 use serde_derive::{Deserialize, Serialize};
-use serde_json::json;
+use serde_json::{json, Value};
 use std::fmt::Error;
 use std::sync::Arc;
 
@@ -224,7 +224,7 @@ impl AulaSession {
         Ok(r.text().await?)
     }
 
-    pub async fn request_get(&self, url: String) -> Result<String, reqwest::Error> {
+    pub async fn request_get(&self, url: String) -> Result<Value, reqwest::Error> {
         let r = self
             .session
             .client
@@ -233,6 +233,8 @@ impl AulaSession {
             .send()
             .await?;
 
-        Ok(r.text().await?)
+        let text = r.text().await?;
+        let v: Value = serde_json::from_str(&text).unwrap();
+        Ok(v)
     }
 }

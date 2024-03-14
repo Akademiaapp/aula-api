@@ -66,16 +66,16 @@ async fn get_events(info: Json<EventRequest>) -> impl Responder {
 
 #[get("/getNotifications")]
 async fn get_notifs(info: Json<LoginInfo>) -> impl Responder {
+    let start = Instant::now();
     let aula_session = AulaSession::from_login_info(&info.into_inner()).await;
 
     let url = format!("https://www.aula.dk/api/v18/?method=notifications.getNotificationsForActiveProfile&activeInstitutionCodes[]={}", aula_session.institution_code);
 
-    let start = Instant::now();
-    let res = aula_session.request_get(url).await.unwrap();
     println!(
         "Time elapsed in expensive_function() is: {:?}",
         start.elapsed()
     );
+    let res = aula_session.request_get(url).await.unwrap();
 
     HttpResponse::Ok().json(res)
 }

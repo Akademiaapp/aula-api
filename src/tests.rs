@@ -120,17 +120,17 @@ mod tests {
         let aula_session = test_login().await;
 
         // let text = aula_session.request_all_messages('0'.to_string()).await.unwrap();
-        let mut time = get_current_time_in_js_format(1).replace("+", "%2B");
+        let mut time = get_current_time_in_js_format(1)
 
         for i in 0..300 {
             // https://www.aula.dk/api/v18/?method=messaging.getNewThreads&lastPollingTimestamp=2024-03-14T12:25:18%2B01:00&page=0
             let url = format!("https://www.aula.dk/api/v18/?method=messaging.getNewThreads&lastPollingTimestamp={}&page=0", time);
-            let text = aula_session.request_get(url).await.unwrap();
+            let json = aula_session.request_get(url).await.unwrap();
 
-            let info = serde_json::from_str::<GetNewThreadsRes>(&text).unwrap();
+            let info: GetNewThreadsRes = serde_json::from_value(json).unwrap();
 
             if info.data.more_messages_exist {
-                println!("");
+                println!();
                 println!("{:?}", info.data.threads)
             } else {
                 print!(".");
