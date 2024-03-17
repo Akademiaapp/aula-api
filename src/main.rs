@@ -1,5 +1,6 @@
 use actix_web::{App, HttpResponse, HttpServer, post, Responder};
 use actix_web::web::Json;
+use actix_cors::Cors;
 use serde_derive::Deserialize;
 
 use crate::aula_handler::{AulaSession, LoginInfo};
@@ -23,6 +24,9 @@ async fn main() -> std::io::Result<()> {
     };
     HttpServer::new(|| {
         App::new()
+            .wrap(
+                Cors::permissive() // This enables all CORS requests
+            )
             .service(login)
             .service(get_events)
             .service(get_notifs)
