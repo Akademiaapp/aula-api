@@ -67,10 +67,15 @@ async fn get_events(info: Json<EventRequest>) -> impl Responder {
     HttpResponse::Ok().json(events)
 }
 
-#[post("/getNotifications")]
-async fn get_notifs(info: Json<LoginInfo>) -> impl Responder {
+#[derive(Deserialize)]
+struct Request {
+    login_info: LoginInfo,
+}
 
-    let aula_session = AulaSession::from_login_info(&info.into_inner()).await;
+#[post("/getNotifications")]
+async fn get_notifs(info: Json<Request>) -> impl Responder {
+
+    let aula_session = AulaSession::from_login_info(&info.login_info).await;
 
     let url = format!("https://www.aula.dk/api/v18/?method=notifications.getNotificationsForActiveProfile&activeInstitutionCodes[]={}", aula_session.institution_code);
 
