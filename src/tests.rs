@@ -3,6 +3,7 @@ mod tests {
     use std::fs::File;
     use std::io::Read;
     use std::io::{self, Write};
+    use std::path::Path;
 
     use serde_json::Value;
 
@@ -38,8 +39,10 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_events() {
-        println!("edcrfv");
-
+       if !Path::new("./user.json").exists() {
+            println!("File does not exist");
+            return
+        }
         let aula_session = test_login().await;
 
         let evensts = aula_session
@@ -55,6 +58,10 @@ mod tests {
 
     #[tokio::test]
     async fn test_reuse_client() {
+        if !Path::new("./user.json").exists() {
+            println!("File does not exist");
+            return
+        }
         let aula_session = test_login().await;
         let aula_session =
             aula_handler::AulaSession::from_login_info(&aula_session.get_login_info()).await;
