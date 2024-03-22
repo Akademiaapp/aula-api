@@ -22,22 +22,22 @@ pub struct Status {
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Daum {
-    pub creator_inst_profile_id: Value,
-    pub creator_profile_id: Value,
+    pub creator_inst_profile_id: Option<i64>,
+    pub creator_profile_id: Option<i64>,
     pub invited_groups: Vec<InvitedGroup>,
     pub primary_resource: Option<PrimaryResource>,
     pub has_attachments: bool,
     pub created_date_time: String,
-    pub lesson: Lesson,
+    pub lesson: Option<Lesson>,
     pub time_slot: Value,
     pub vacation_children_count_by_dates: Value,
     pub belongs_to_profiles: Vec<i64>,
     pub belongs_to_resources: Vec<Value>,
-    pub old_all_day: Value,
+    pub old_all_day: Option<bool>,
     pub requires_new_answer: bool,
     pub directly_related: bool,
     pub response_deadline: Value,
-    pub response_status: Value,
+    pub response_status: Option<String>,
     pub id: i64,
     pub title: String,
     pub all_day: bool,
@@ -53,8 +53,8 @@ pub struct Daum {
     pub additional_resources: Vec<Value>,
     pub additional_resource_text: Value,
     pub repeating: Value,
-    pub institution_code: Value,
-    pub institution_name: Value,
+    pub institution_code: Option<String>,
+    pub institution_name: Option<String>,
     pub added_to_institution_calendar: bool,
 }
 
