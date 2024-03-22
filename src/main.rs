@@ -71,6 +71,7 @@ async fn get_events(info: Json<EventRequest>) -> impl Responder {
 struct Request {
     login_info: LoginInfo,
 }
+
 #[post("/getNotifications")]
 async fn get_notifs(info: Json<Request>) -> impl Responder {
 
