@@ -30,7 +30,11 @@ jobs:
       - name: Build for Windows
         run: cargo build --target x86_64-pc-windows-gnu --release
       - name: Build for Linux
-        run: cargo build --target aarch64-unknown-linux-gnu --release
+        uses: actions-rs/cargo@v1
+        with:
+          use-cross: true
+          command: build
+          args: --release --target aarch64-unknown-linux-gnu
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v2
         with:
