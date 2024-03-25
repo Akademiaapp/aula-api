@@ -29,8 +29,8 @@ async fn post_form(
     data: String,
     client: &Client,
 ) -> Result<Response, reqwest::Error> {
+    let url = prev_r.url().clone().to_string();
     let body = prev_r.text().await?;
-    let url = prev_r.url().to_string();
     let action = find_form_action(&body,&url, None);
 
     println!("action: {}", action);
@@ -68,9 +68,9 @@ pub async fn unilogin(username: &str, password: &str) -> Result<Session, reqwest
     println!("sending selected idp");
     let mut r = post_form(resp, "selectedIdp=uni_idp".to_string(), &client).await?;
     println!("sending username");
-    r = post_form(r, format!("password={}", password), &client).await?;
-    println!("sending password");
     r = post_form(r, format!("username={}", username), &client).await?;
+    println!("sending password");
+    r = post_form(r, format!("password={}", password), &client).await?;
     println!("send password");
 
     let payload = get_payload(&r.text().await?);
@@ -85,8 +85,8 @@ pub async fn unilogin(username: &str, password: &str) -> Result<Session, reqwest
 
     r = post_form(r, "".to_string(), &client).await?;
 
+    let url = r.url().clone().to_string();
     let text = r.text().await?;
-    let url = r.url().to_string();
     let action = find_form_action(&text, &url, Some(&"saml-post-binding".to_string()));
     println!("action: {}", action);
 
