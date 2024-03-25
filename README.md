@@ -1,4 +1,4 @@
-# Aula API
+# Aula API.
 A rather simple API for interaction with the Danish school platform [Aula](https://aulainfo.dk/). When starting the API it opens endpoints for interacting with Aula's functionalities.
 
 
