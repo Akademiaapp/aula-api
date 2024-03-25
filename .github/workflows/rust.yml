@@ -25,10 +25,24 @@ jobs:
         run: cargo build --target x86_64-pc-windows-gnu --release
       - name: Build for Linux
         run: cargo build --release
-      - name: Upload artifact
+      - name: Upload Windows artifact
         uses: actions/upload-artifact@v2
         with:
-          name: build
-          path: |
-            target/x86_64-pc-windows-gnu/release/*.exe
-            target/release/*
+          name: windows-build
+          path: target/x86_64-pc-windows-gnu/release/*.exe
+      - name: Upload Linux artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: linux-build
+          path: target/release/rust-port
+      - name: Gen Versioning Data
+        id: versioning
+        uses: Soumeh/Auto-Versioning@main
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: target/release/rust-port
+          asset_name: aula-api
+          tag: ${{ steps.versioning.outputs.tag }}
+          overwrite: true
