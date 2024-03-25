@@ -23,8 +23,12 @@ jobs:
         run: rustup target add x86_64-pc-windows-gnu
       - name: Build for Windows
         run: cargo build --target x86_64-pc-windows-gnu --release
+      - name: Build for Linux
+        run: cargo build --release
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
           name: build
-          path: target/x86_64-pc-windows-gnu/release/*.exe
+          path: |
+            target/x86_64-pc-windows-gnu/release/*.exe
+            target/release/*
