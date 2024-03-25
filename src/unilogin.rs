@@ -64,9 +64,13 @@ pub async fn unilogin(username: &str, password: &str) -> Result<Session, reqwest
     println!("{}", resp.status());
     println!("{:?}", resp.cookies().next());
 
+    println!("sending selected idp");
     let mut r = post_form(resp, "selectedIdp=uni_idp".to_string(), &client).await?;
-    r = post_form(r, format!("username={}", username), &client).await?;
+    println!("sending username");
     r = post_form(r, format!("password={}", password), &client).await?;
+    println!("sending password");
+    r = post_form(r, format!("username={}", username), &client).await?;
+    println!("send password");
 
     let payload = get_payload(&r.text().await?);
 
