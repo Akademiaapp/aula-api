@@ -10,7 +10,7 @@ use scraper::{Html, Selector};
 
 
 
-fn find_form_action(prev_r: &String, name: Option<&String>) -> String {
+fn find_form_action(prev_r: &String, prev_url: &String, name: Option<&String>) -> String {
     // implementation here
     let document = Html::parse_document(&prev_r);
 
@@ -20,7 +20,7 @@ fn find_form_action(prev_r: &String, name: Option<&String>) -> String {
         Selector::parse("form").unwrap()
     };
     let form = document.select(&selector).next().unwrap();
-    let action = form.value().attr("action").unwrap();
+    let action = form.value().attr("action").unwrap_or(prev_url);
     action.to_string()
 }
 
@@ -30,7 +30,8 @@ async fn post_form(
     client: &Client,
 ) -> Result<Response, reqwest::Error> {
     let body = prev_r.text().await?;
-    let action = find_form_action(&body, None);
+    let url = prev_r.url().to_string();
+    let action = find_form_action(&body,&url, None);
 
     println!("action: {}", action);
 
@@ -85,7 +86,8 @@ pub async fn unilogin(username: &str, password: &str) -> Result<Session, reqwest
     r = post_form(r, "".to_string(), &client).await?;
 
     let text = r.text().await?;
-    let action = find_form_action(&text, Some(&"saml-post-binding".to_string()));
+    let url = r.url().to_string();
+    let action = find_form_action(&text, &url, Some(&"saml-post-binding".to_string()));
     println!("action: {}", action);
 
     r = client
