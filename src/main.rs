@@ -31,7 +31,7 @@ async fn main() -> std::io::Result<()> {
             .service(get_events)
             .service(get_notifs)
     })
-    .bind(("127.0.0.1", port))?
+    .bind(("0.0.0.0", port))?
     .run()
     .await
 }
