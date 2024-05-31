@@ -77,7 +77,7 @@ async fn get_notifs(info: Json<Request>) -> impl Responder {
 
     let aula_session = AulaSession::from_login_info(&info.login_info).await;
 
-    let url = format!("https://www.aula.dk/api/v18/?method=notifications.getNotificationsForActiveProfile&activeInstitutionCodes[]={}", aula_session.institution_code);
+    let url = format!("https://www.aula.dk/api/v19/?method=notifications.getNotificationsForActiveProfile&activeInstitutionCodes[]={}", aula_session.institution_code);
 
     let res = aula_session.request_get(url).await.unwrap();
     println!("{:?}", res);
@@ -91,7 +91,7 @@ async fn get_notifs(info: Json<Request>) -> impl Responder {
 //
 //     let aula_session = AulaSession::from_login_info(&info.into_inner()).await;
 //
-//     let url = format!("https://www.aula.dk/api/v18/?method=messaging.getMessages&page={}", page);
+//     let url = format!("https://www.aula.dk/api/v19/?method=messaging.getMessages&page={}", page);
 //
 //     let res = aula_session.request_get(url).await.unwrap();
 //

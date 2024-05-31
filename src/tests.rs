@@ -130,8 +130,8 @@ mod tests {
         let mut time = get_current_time_in_js_format(1);
 
         for i in 0..300 {
-            // https://www.aula.dk/api/v18/?method=messaging.getNewThreads&lastPollingTimestamp=2024-03-14T12:25:18%2B01:00&page=0
-            let url = format!("https://www.aula.dk/api/v18/?method=messaging.getNewThreads&lastPollingTimestamp={}&page=0", time);
+            // https://www.aula.dk/api/v19/?method=messaging.getNewThreads&lastPollingTimestamp=2024-03-14T12:25:18%2B01:00&page=0
+            let url = format!("https://www.aula.dk/api/v19/?method=messaging.getNewThreads&lastPollingTimestamp={}&page=0", time);
             let json = aula_session.request_get(url).await.unwrap();
 
             let info: GetNewThreadsRes = serde_json::from_value(json).unwrap();

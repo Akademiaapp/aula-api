@@ -37,7 +37,7 @@ impl AulaSession {
     }
 
     async fn new(session: Session) -> Self {
-        //https://www.aula.dk/api/v18/?method=profiles.getProfilesByLogin
+        //https://www.aula.dk/api/v19/?method=profiles.getProfilesByLogin
         let profile_info = Self::request_profile_info(&session.client).await;
 
         let token = Self::get_cookie(&session, "Csrfp-Token".to_string());
@@ -161,7 +161,7 @@ impl AulaSession {
 
     async fn request_profile_info(client: &Client) -> Data {
         let r = client
-            .get("https://www.aula.dk/api/v18/?method=profiles.getProfilesByLogin")
+            .get("https://www.aula.dk/api/v19/?method=profiles.getProfilesByLogin")
             .send()
             .await
             .unwrap();
@@ -191,7 +191,7 @@ impl AulaSession {
             .session
             .client
             .post(
-                "https://www.aula.dk/api/v18/?method=calendar.getEventsByProfileIdsAndResourceIds",
+                "https://www.aula.dk/api/v19/?method=calendar.getEventsByProfileIdsAndResourceIds",
             )
             .json(&data)
             .header("Csrfp-Token", &self.token)
@@ -211,7 +211,7 @@ impl AulaSession {
     pub async fn request_all_messages(&self, page: String) -> Result<String, reqwest::Error> {
         // println!("{}", r.text().await?);
         let r = self.session.client
-            .get(format!("https://www.aula.dk/api/v18/?method=messaging.getThreads&sortOn=date&orderDirection=desc&page={}", page).as_str())
+            .get(format!("https://www.aula.dk/api/v19/?method=messaging.getThreads&sortOn=date&orderDirection=desc&page={}", page).as_str())
             .header("Csrfp-Token", &self.token)
             .send()
             .await?;
